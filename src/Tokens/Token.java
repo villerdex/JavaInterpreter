@@ -1,11 +1,15 @@
 package Tokens;
 
+import main.Varaiable;
+
 /**
  * Created by Didoy on 8/22/2016.
  */
 public class Token {
+
     private Type type;
     private String text;
+    private Varaiable varaiable;
 
     public Token( Type type, String text )
     {
@@ -13,8 +17,17 @@ public class Token {
         this.text = text;
     }
 
+    public Token (Type type, Varaiable varaiable){
+        this.type = type;
+        this.varaiable = varaiable;
+    }
+
     public String getText() {
         return text;
+    }
+
+    public Varaiable getVaraiable() {
+        return varaiable;
     }
 
     public Type getType() {
@@ -26,6 +39,8 @@ public class Token {
 
         STRING,
         KEYWORD,
+        VARIABLE,
+        VARNAME,
         PRINT,
         INPUT,
         NUMBER,

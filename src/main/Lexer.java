@@ -4,6 +4,8 @@ import Tokens.Token;
 
 import java.util.ArrayList;
 
+import static Tokens.Token.Type.VARNAME;
+
 /**
  * Created by Didoy on 8/20/2016.
  */
@@ -45,12 +47,11 @@ public class Lexer {
 
     public void tokenize(String source){
 
-        for (i = 0; i < source.length() -1; i++ ){
+        for (i = 0; i < source.length(); i++ ){
 
         char c = source.charAt(i);
             findToken(c);
         }
-        System.out.println("Tokenize finish");
     }
 
     private void findToken(char c){
@@ -126,6 +127,9 @@ public class Lexer {
                 break;
             case "end":
                 tokType = Token.Type.END_BLOCK;
+                break;
+            case "var":
+                tokType = Token.Type.VARIABLE;
                 break;
         }
 

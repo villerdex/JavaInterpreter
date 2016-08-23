@@ -18,14 +18,22 @@ public class Parselet {
     public Statement statementPrint(){
         parser.matchToken(Token.Type.PRINT);
         parser.matchToken(Token.Type.LEFT_PARENTHESIS);
-        String str = parser.getCurrentToken().getText();
-        PrintExpression printExpression = new PrintExpression(str);
+
+        PrintExpression printExpression = new PrintExpression(parser.getCurrentToken());
         Statement result = new StatementPrint( printExpression );
 
         Token.Type x = Token.Type.STRING;
         parser.matchToken(x);
         parser.matchToken(Token.Type.RIGHT_PARENTHESIS);
         return result;
+    }
+
+
+    public Statement statementVariable(){
+
+        parser.matchToken(Token.Type.VARIABLE);
+
+        return null;
     }
 
 }

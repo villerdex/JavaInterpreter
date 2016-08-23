@@ -32,7 +32,6 @@ public class Parser {
     public void parse(ArrayList<Token> tokenList){
         tokenArrayList = tokenList;
 
-        System.out.println("parse started");
         matchToken(Token.Type.START_BLOCK);
         while( getCurrentToken().getType() != Token.Type.END_BLOCK )
         {
@@ -41,7 +40,6 @@ public class Parser {
         }
         matchToken(Token.Type.END_BLOCK);
 
-        System.out.println("parse finish");
 
     }
 
@@ -51,13 +49,15 @@ public class Parser {
             case PRINT:
              statement = parselet.statementPrint();
              statementArrayList.add(statement);
+            case VARIABLE:
+
         }
     }
 
 
     public void matchToken(Token.Type token){
         if (token == getCurrentToken().getType()){
-            eatToken();
+            eatToken(1);    // eat the current token
         }
     }
 
@@ -68,16 +68,16 @@ public class Parser {
         return token;
     }
 
-    private void eatToken(){
-        currentTokenIndex += 1;
-        System.out.println(currentTokenIndex + "---------" + tokenArrayList.size());
+    private void eatToken(int offset){
+        currentTokenIndex += offset;
+        //System.out.println(currentTokenIndex + "---------" + tokenArrayList.size());
     }
 
     public Expression getExpression(){
         Expression expression = null;
 
         while (getCurrentToken().getType() == Token.Type.PRINT){
-            expression = new PrintExpression(String.valueOf(getCurrentToken().getText()));
+            expression = new PrintExpression(getCurrentToken());
         }
         return expression;
     }
