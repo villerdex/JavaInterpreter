@@ -28,12 +28,4 @@ public class Parselet {
         return result;
     }
 
-
-    public Statement statementVariable(){
-
-        parser.matchToken(Token.Type.VARIABLE);
-
-        return null;
-    }
-
 }

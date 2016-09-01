@@ -54,6 +54,18 @@ public class Token {
         LEFT_BRACE,
         LEFT_BRACKET,
         RIGHT_BRACKET,
+
+        EQUALS,
+        PLUS,
+        MINUS,
+        MULTIPLICATION,
+        DIVISION,
+
+        GREATER_THAN,
+        LESS_THAN,
+        OR,
+        AND
+
     }
 
 }

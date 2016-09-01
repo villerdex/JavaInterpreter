@@ -40,7 +40,6 @@ public class Parser {
         }
         matchToken(Token.Type.END_BLOCK);
 
-
     }
 
     private void identifyKeyWord(Token.Type token ){
@@ -49,8 +48,6 @@ public class Parser {
             case PRINT:
              statement = parselet.statementPrint();
              statementArrayList.add(statement);
-            case VARIABLE:
-
         }
     }
 

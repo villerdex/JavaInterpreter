@@ -5,6 +5,7 @@ import Tokens.Token;
 import java.util.ArrayList;
 
 import static Tokens.Token.Type.VARNAME;
+import static java.lang.Enum.valueOf;
 
 /**
  * Created by Didoy on 8/20/2016.
@@ -18,7 +19,9 @@ public class Lexer {
         NUMBER,
         PUNCTUATION,
         PARENTHESIS,
-        KEYWORD
+        KEYWORD,
+        OPERATORS
+
     }
 
 
@@ -74,7 +77,12 @@ public class Lexer {
 
                     state = State.STRING;
                 }
-
+                else if (Character.isDigit(c)){
+                    state = State.NUMBER;
+                }
+                else{
+                    state = State.OPERATORS;
+                }
                 break;
 
             // after default state
@@ -89,13 +97,13 @@ public class Lexer {
                     tokenArrayList.add( new Token(tokType, token) );
                     token = "";
                     state = State.DEFAULT;
-                    i--; // minus the index incase when symbols like parenthesis triggered this else code block
+                    i--; // minus the index in-case symbols like parenthesis, it will triggered this else code block
                 }
                 break;
 
 
             case STRING:
-                if( c == y.charAt(0) )
+                if( c == y.charAt(0) ) // if it is single colon
                 {
                     tokenArrayList.add( new Token(Token.Type.STRING, token) );
                     token = "";
@@ -105,6 +113,23 @@ public class Lexer {
                 {
                     token += c;
                 }
+                break;
+            case NUMBER:
+                if( Character.isDigit(c) || (c == '.'))
+                {
+                    token += c;
+                }
+                else
+                {
+                    tokenArrayList.add( new Token(Token.Type.NUMBER, token ) );
+                    token = "";
+                    state = State.DEFAULT;
+                    i--;
+                }
+                break;
+            case OPERATORS:
+                tokenArrayList.add( findOperator(c) );
+                state = State.DEFAULT;
                 break;
         }
     }
@@ -173,6 +198,43 @@ public class Lexer {
         return type;
 
     }
+
+    private Token findOperator(char c){
+        Token token = new Token(Token.Type.UNKNOWN, "Unknows");
+
+        if (c == '='){
+            token = new Token(Token.Type.EQUALS, "=");
+        }else if (c == '+'){
+            token = new Token(Token.Type.PLUS, "+");
+
+        }else if (c == '-'){
+            token = new Token(Token.Type.MINUS, "-");
+
+        }else if (c == '/'){
+            token = new Token(Token.Type.DIVISION, "/");
+
+        }else  if (c == '*'){
+            token = new Token(Token.Type.MULTIPLICATION, "*");
+        }
+        else  if (c == '>'){
+            token = new Token(Token.Type.MULTIPLICATION, "*");
+        }
+        else  if (c == '&'){
+            token = new Token(Token.Type.AND, "&");
+        }
+        else  if (c == '|'){
+            token = new Token(Token.Type.OR, "|");
+        }
+        else  if (c == '>'){
+            token = new Token(Token.Type.GREATER_THAN, ">");
+        }
+        else  if (c == '<'){
+            token = new Token(Token.Type.LESS_THAN, "<");
+        }
+
+        return token;
+    }
+
 
 
 }
