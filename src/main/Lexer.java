@@ -66,7 +66,7 @@ public class Lexer {
                 }
                 else if (isOperator(c)){
                     state = State.OPERATORS;
-                    tokenArrayList.add( findOperator(c) );
+                    tokenArrayList.add( new Token(Token.Type.OPERATOR, String.valueOf(c)) );
                     state = State.DEFAULT;
 
                 }

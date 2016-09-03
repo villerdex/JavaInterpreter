@@ -59,6 +59,7 @@ public class Token {
         LEFT_BRACKET,
         RIGHT_BRACKET,
 
+        OPERATOR,
         EQUALS,
         PLUS,
         MINUS,

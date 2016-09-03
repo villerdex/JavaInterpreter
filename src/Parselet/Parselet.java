@@ -42,9 +42,17 @@ public class Parselet {
         parser.matchToken(Token.Type.KEYWORD );
         parser.matchToken(Token.Type.EQUALS);
 
-        Object varValue = parser.getCurrentToken().getText();
+        while (parser.getCurrentToken().getType() == Token.Type.KEYWORD  ||  parser.getCurrentToken().getType() == Token.Type.VARIABLE  ||
+                parser.getCurrentToken().getType() == Token.Type.NUMBER  || parser.getCurrentToken().getType() == Token.Type.STRING ||
+                parser.getCurrentToken().getType() == Token.Type.OPERATOR ){
 
-        Varaiable varaiable = new Varaiable(varName, varValue);
+            Object varValue = parser.getCurrentToken().getText();
+            Varaiable varaiable = new Varaiable(varName, varValue);
+
+
+        }
+
+
         variableList.add(varaiable);
         Statement result = new StatementVariable( varaiable );
 
@@ -61,11 +69,52 @@ public class Parselet {
             if ( ((Varaiable) o).getName().equals(varName) ){
                 varaiable.setName(varName);
                 varaiable.setValue(((Varaiable) o).getValue());
-                System.out.println(String.valueOf(varaiable.getValue().toString()) );
                 var = varaiable;
             }
         }
         return  var;
     }
+
+    private Token.Type findOperator(char c){
+        Token.Type type = Token.Type.UNKNOWN;
+
+
+        if (c == '='){
+            type = Token.Type.EQUALS;
+        }else if (c == '+'){
+            type = Token.Type.EQUALS;
+
+        }else if (c == '-'){
+            type = Token.Type.EQUALS;
+
+
+        }else if (c == '/'){
+            type = Token.Type.EQUALS;
+
+        }else  if (c == '*'){
+            type = Token.Type.EQUALS;
+
+        }
+        else  if (c == '>'){
+            type = Token.Type.EQUALS;
+        }
+        else  if (c == '&'){
+            type = Token.Type.EQUALS;
+
+        }
+        else  if (c == '|'){
+            type = Token.Type.EQUALS;
+        }
+        else  if (c == '<'){
+            type = Token.Type.EQUALS;
+
+        }else {
+            type = Token.Type.EQUALS;
+        }
+
+        return type;
+    }
+
+
 
 }
