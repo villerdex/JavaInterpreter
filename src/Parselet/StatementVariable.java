@@ -14,12 +14,9 @@ public class StatementVariable implements Statement {
     Varaiable varaiable;
     ArrayList param;
 
-    public StatementVariable(Varaiable varaiable) {
-        this.varaiable = varaiable;
-    }
 
     public StatementVariable(ArrayList parameters) {
-
+        this.param = parameters;
     }
 
 

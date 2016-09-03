@@ -10,7 +10,7 @@ public class Main {
 
         String code = "START;" +
                 "var Y = 132 + 32;"+
-                "sulat(Y );" +
+                "sulat(Y);" +
                 "END;";
 
 

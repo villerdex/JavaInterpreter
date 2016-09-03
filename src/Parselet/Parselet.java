@@ -14,6 +14,7 @@ public class Parselet {
 
     private Parser parser;
     private ArrayList<Varaiable> variableList = new ArrayList<Varaiable>();
+    private ArrayList<Token> paramList = new ArrayList<Token>();
 
     public Parselet(Parser parser) {
         this.parser = parser;
@@ -33,30 +34,32 @@ public class Parselet {
 
 
     public Statement statementVariable(){
+        Statement result = null;
         parser.matchToken(Token.Type.VARIABLE);
 
-        Token tok = parser.getCurrentToken();
+        String varName  = parser.getCurrentToken().getText();
 
-        String varName = tok.getText();
+        parser.matchToken( Token.Type.KEYWORD );
+        parser.matchToken( Token.Type.EQUALS) ;
 
-        parser.matchToken(Token.Type.KEYWORD );
-        parser.matchToken(Token.Type.EQUALS);
+        if (parser.getCurrentToken().getType() == Token.Type.KEYWORD){
+            Varaiable varaiable =   findVarDefinition(parser.getCurrentToken().getText());
+                    if (varaiable != null){
+                        
+                    }
+        }
 
         while (parser.getCurrentToken().getType() == Token.Type.KEYWORD  ||  parser.getCurrentToken().getType() == Token.Type.VARIABLE  ||
                 parser.getCurrentToken().getType() == Token.Type.NUMBER  || parser.getCurrentToken().getType() == Token.Type.STRING ||
                 parser.getCurrentToken().getType() == Token.Type.OPERATOR ){
 
-            Object varValue = parser.getCurrentToken().getText();
-            Varaiable varaiable = new Varaiable(varName, varValue);
+            paramList.add(parser.getCurrentToken());
 
+            result = new StatementVariable( paramList );
 
+            parser.matchToken(parser.getCurrentToken().getType());
         }
 
-
-        variableList.add(varaiable);
-        Statement result = new StatementVariable( varaiable );
-
-        parser.matchToken(parser.getCurrentToken().getType());
         return  result;
     }
 
