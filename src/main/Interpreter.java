@@ -25,11 +25,11 @@ public class Interpreter {
     public void  run(String source){
         source = validate(source);
         lexer.tokenize(source);
-        //lexer.printTokens();
+        lexer.printTokens();
 
         parser.parse(lexer.getTokenArrayList());
 
-        ArrayList<Statement> statementArrayList = parser.getStatementArrayList();
+        ArrayList<Statement> statementArrayList = parser.getStatementsAST();
 
         for (Statement statement : statementArrayList){
             statement.execute();
@@ -41,7 +41,7 @@ public class Interpreter {
 
           String[] raw  = s.split(";");
                 for (String str : raw){
-                    str = str + " ";    // add space every after semicolon
+                   str = str + " ";    // add space every after semicolon
                     source += str;
                 }
         return source;

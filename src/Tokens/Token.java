@@ -34,6 +34,10 @@ public class Token {
         return type;
     }
 
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     public enum Type{
         UNKNOWN,
 
@@ -64,7 +68,11 @@ public class Token {
         GREATER_THAN,
         LESS_THAN,
         OR,
-        AND
+        AND,
+
+        SEMI_COLON,
+        OBJECT
+
 
     }
 

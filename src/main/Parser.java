@@ -17,7 +17,7 @@ public class Parser {
 
     private ArrayList<Token> tokenArrayList;
 
-    private ArrayList<Statement> statementArrayList = new ArrayList<>();
+    private ArrayList<Statement> statementsAST = new ArrayList<>();
 
     private  Parselet parselet = new Parselet(this);
 
@@ -25,8 +25,8 @@ public class Parser {
 
     }
 
-    public ArrayList<Statement> getStatementArrayList(){
-        return statementArrayList;
+    public ArrayList<Statement> getStatementsAST(){
+        return statementsAST;
     }
 
     public void parse(ArrayList<Token> tokenList){
@@ -45,9 +45,15 @@ public class Parser {
     private void identifyKeyWord(Token.Type token ){
         Statement statement;
         switch (token){
+            case VARIABLE:
+                statement = parselet.statementVariable();
+                statementsAST.add(statement);
+                break;
             case PRINT:
-             statement = parselet.statementPrint();
-             statementArrayList.add(statement);
+                 statement = parselet.statementPrint();
+                 statementsAST.add(statement);
+                break;
+
         }
     }
 
@@ -65,17 +71,24 @@ public class Parser {
         return token;
     }
 
+    public Token getCurrentToken(int offset){
+
+        Token token = tokenArrayList.get(currentTokenIndex + offset);
+
+        return token;
+    }
+
     private void eatToken(int offset){
         currentTokenIndex += offset;
-        //System.out.println(currentTokenIndex + "---------" + tokenArrayList.size());
+        System.out.println(currentTokenIndex + "---------" + tokenArrayList.size());
     }
 
-    public Expression getExpression(){
-        Expression expression = null;
-
-        while (getCurrentToken().getType() == Token.Type.PRINT){
-            expression = new PrintExpression(getCurrentToken());
-        }
-        return expression;
-    }
+//    public Expression getExpression(){
+//        Expression expression = null;
+//
+//        while (getCurrentToken().getType() == Token.Type.PRINT){
+//            expression = new PrintExpression(getCurrentToken());
+//        }
+//        return expression;
+//    }
 }

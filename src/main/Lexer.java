@@ -61,12 +61,24 @@ public class Lexer {
         switch (state){
             case DEFAULT:
 
-                if(isParenthesis(c)) {
+                if (c == ' '){
+                state = State.DEFAULT;
+                }
+                else if (isOperator(c)){
+                    state = State.OPERATORS;
+                    tokenArrayList.add( findOperator(c) );
+                    state = State.DEFAULT;
+
+                }
+                else if(isParenthesis(c)) {
                 tokType = findParenthesisType(c);
                 tokenArrayList.add(new Token(tokType, Character.toString(c)));
                     state = State.DEFAULT;
                 }
-
+                else if (Character.isDigit(c)){
+                    token += c;
+                    state = State.NUMBER;
+                }
                 else if (Character.isLetterOrDigit(c)){
 
                     token += c;
@@ -77,30 +89,15 @@ public class Lexer {
 
                     state = State.STRING;
                 }
-                else if (Character.isDigit(c)){
-                    state = State.NUMBER;
-                }
-                else{
-                    state = State.OPERATORS;
-                }
-                break;
 
-            // after default state
-            case KEYWORD:
-                if(Character.isLetterOrDigit(c) ||
-                        c == '_' || c == '!')
-                {
-                    token += c;
-                }
-                else {
-                    tokType = findKeyWord(token);
-                    tokenArrayList.add( new Token(tokType, token) );
-                    token = "";
+                else if (isPunctuation(c)){
+                    state = State.PUNCTUATION;
+                }else {
                     state = State.DEFAULT;
-                    i--; // minus the index in-case symbols like parenthesis, it will triggered this else code block
                 }
                 break;
 
+            // AFTER DEFAULT STATE
 
             case STRING:
                 if( c == y.charAt(0) ) // if it is single colon
@@ -131,6 +128,21 @@ public class Lexer {
                 tokenArrayList.add( findOperator(c) );
                 state = State.DEFAULT;
                 break;
+
+            case KEYWORD:
+                if(Character.isLetterOrDigit(c) ||
+                        c == '_' || c == '!')
+                {
+                    token += c;
+                }
+                else {
+                    tokType = findKeyWord(token);
+                    tokenArrayList.add( new Token(tokType, token) );
+                    token = "";
+                    state = State.DEFAULT;
+                    i--; // minus the index in-case of white space, it will triggered this else code block
+                }
+                break;
         }
     }
 
@@ -156,6 +168,8 @@ public class Lexer {
             case "var":
                 tokType = Token.Type.VARIABLE;
                 break;
+            default:
+                tokType = Token.Type.KEYWORD;
         }
 
 
@@ -200,7 +214,7 @@ public class Lexer {
     }
 
     private Token findOperator(char c){
-        Token token = new Token(Token.Type.UNKNOWN, "Unknows");
+        Token token = new Token(Token.Type.UNKNOWN, String.valueOf(c) + i);
 
         if (c == '='){
             token = new Token(Token.Type.EQUALS, "=");
@@ -216,9 +230,6 @@ public class Lexer {
         }else  if (c == '*'){
             token = new Token(Token.Type.MULTIPLICATION, "*");
         }
-        else  if (c == '>'){
-            token = new Token(Token.Type.MULTIPLICATION, "*");
-        }
         else  if (c == '&'){
             token = new Token(Token.Type.AND, "&");
         }
@@ -231,8 +242,53 @@ public class Lexer {
         else  if (c == '<'){
             token = new Token(Token.Type.LESS_THAN, "<");
         }
-
         return token;
+    }
+
+
+    private boolean isPunctuation(char c){
+
+        if (c == ';'){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    private boolean isOperator(char c){
+
+        boolean isOperator = false;
+
+        if (c == '='){
+            isOperator = true;
+        }else if (c == '+'){
+            isOperator = true;
+
+        }else if (c == '-'){
+            isOperator = true;
+
+        }else if (c == '/'){
+            isOperator = true;
+
+        }else  if (c == '*'){
+            isOperator = true;
+        }
+        else  if (c == '>'){
+            isOperator = true;
+        }
+        else  if (c == '&'){
+            isOperator = true;
+        }
+        else  if (c == '|'){
+            isOperator = true;
+        }
+        else  if (c == '<'){
+            isOperator = true;
+        }else {
+            isOperator = false;
+        }
+
+    return isOperator;
     }
 
 

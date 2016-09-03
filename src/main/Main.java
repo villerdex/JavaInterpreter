@@ -9,12 +9,12 @@ public class Main {
 
 
         String code = "START;" +
-                "sulat('xxx');" +
+                "var Y = 'XX';"+
+                "sulat(Y);" +
                 "END;";
 
 
         Interpreter interpreter = new Interpreter(code);
-
     }
 
 }
