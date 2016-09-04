@@ -83,6 +83,39 @@ public class Parser {
         System.out.println(currentTokenIndex + "---------" + tokenArrayList.size());
     }
 
+    public Token findOperator(char c){
+        Token token = new Token(Token.Type.UNKNOWN, String.valueOf(c));
+
+        if (c == '='){
+            token = new Token(Token.Type.EQUALS, "=");
+        }else if (c == '+'){
+            token = new Token(Token.Type.PLUS, "+");
+
+        }else if (c == '-'){
+            token = new Token(Token.Type.MINUS, "-");
+
+        }else if (c == '/'){
+            token = new Token(Token.Type.DIVISION, "/");
+
+        }else  if (c == '*'){
+            token = new Token(Token.Type.MULTIPLICATION, "*");
+        }
+        else  if (c == '&'){
+            token = new Token(Token.Type.AND, "&");
+        }
+        else  if (c == '|'){
+            token = new Token(Token.Type.OR, "|");
+        }
+        else  if (c == '>'){
+            token = new Token(Token.Type.GREATER_THAN, ">");
+        }
+        else  if (c == '<'){
+            token = new Token(Token.Type.LESS_THAN, "<");
+        }
+        return token;
+    }
+
+
 //    public Expression getExpression(){
 //        Expression expression = null;
 //

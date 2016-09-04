@@ -125,7 +125,7 @@ public class Lexer {
                 }
                 break;
             case OPERATORS:
-                tokenArrayList.add( findOperator(c) );
+                tokenArrayList.add( new Token(Token.Type.OPERATOR, String.valueOf(c)) );
                 state = State.DEFAULT;
                 break;
 
@@ -213,37 +213,6 @@ public class Lexer {
 
     }
 
-    private Token findOperator(char c){
-        Token token = new Token(Token.Type.UNKNOWN, String.valueOf(c) + i);
-
-        if (c == '='){
-            token = new Token(Token.Type.EQUALS, "=");
-        }else if (c == '+'){
-            token = new Token(Token.Type.PLUS, "+");
-
-        }else if (c == '-'){
-            token = new Token(Token.Type.MINUS, "-");
-
-        }else if (c == '/'){
-            token = new Token(Token.Type.DIVISION, "/");
-
-        }else  if (c == '*'){
-            token = new Token(Token.Type.MULTIPLICATION, "*");
-        }
-        else  if (c == '&'){
-            token = new Token(Token.Type.AND, "&");
-        }
-        else  if (c == '|'){
-            token = new Token(Token.Type.OR, "|");
-        }
-        else  if (c == '>'){
-            token = new Token(Token.Type.GREATER_THAN, ">");
-        }
-        else  if (c == '<'){
-            token = new Token(Token.Type.LESS_THAN, "<");
-        }
-        return token;
-    }
 
 
     private boolean isPunctuation(char c){

@@ -1,10 +1,13 @@
 package Parselet;
 
+import Expression.ExceptionType;
+import Expression.InterpreterException;
 import Expression.PrintExpression;
 import Tokens.Token;
 import main.Parser;
 import main.Varaiable;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.util.ArrayList;
 
 /**
@@ -13,7 +16,7 @@ import java.util.ArrayList;
 public class Parselet {
 
     private Parser parser;
-    private ArrayList<Varaiable> variableList = new ArrayList<Varaiable>();
+    private static final ArrayList<Varaiable> variableList = new ArrayList<Varaiable>();
     private ArrayList<Token> paramList = new ArrayList<Token>();
 
     public Parselet(Parser parser) {
@@ -37,41 +40,49 @@ public class Parselet {
         Statement result = null;
         parser.matchToken(Token.Type.VARIABLE);
 
-        String varName  = parser.getCurrentToken().getText();
+        Token token = parser.getCurrentToken();
+
+        String varName  = token.getText();
 
         parser.matchToken( Token.Type.KEYWORD );
+
+            if (parser.getCurrentToken().getType() == Token.Type.OPERATOR){
+              if (findOperator( parser.getCurrentToken() .getText().charAt(0) ) == Token.Type.EQUALS){
+                    parser.matchToken( parser.getCurrentToken().getType() );
+              }else {
+                  InterpreterException.ThrowException(" Invalid " + ExceptionType.ArgumentException);
+              }
+            }
+
         parser.matchToken( Token.Type.EQUALS) ;
 
-        if (parser.getCurrentToken().getType() == Token.Type.KEYWORD){
-            Varaiable varaiable =   findVarDefinition(parser.getCurrentToken().getText());
-                    if (varaiable != null){
-                        
-                    }
+
+        while (parser.getCurrentToken().getType()  == Token.Type.KEYWORD  || parser.getCurrentToken().getType()  == Token.Type.NUMBER
+                || parser.getCurrentToken().getType()  == Token.Type.STRING || parser.getCurrentToken().getType()  == Token.Type.OPERATOR ){
+
+                        if (parser.getCurrentToken().getType() == Token.Type.KEYWORD && findVarDefinition(parser.getCurrentToken().getText()) == null ) {
+                                break; // THE CURRENT TOKEN KEYWORD IS NOT CONSIDERED  AS VARIABLE. THEREFORE ITS A KEYWORD,
+                                        // AND KEYWORD NEED TO GO FURTHER EVALUATION WHICH IS NOT SUPPORTED BY THIS INTERPRETER
+
+                        }else{
+                            paramList.add(parser.getCurrentToken() ); // ADD THE TOKEN into parameter list
+                            parser.matchToken(parser.getCurrentToken().getType() );
+                        }
         }
-
-        while (parser.getCurrentToken().getType() == Token.Type.KEYWORD  ||  parser.getCurrentToken().getType() == Token.Type.VARIABLE  ||
-                parser.getCurrentToken().getType() == Token.Type.NUMBER  || parser.getCurrentToken().getType() == Token.Type.STRING ||
-                parser.getCurrentToken().getType() == Token.Type.OPERATOR ){
-
-            paramList.add(parser.getCurrentToken());
-
-            result = new StatementVariable( paramList );
-
-            parser.matchToken(parser.getCurrentToken().getType());
-        }
-
+        result = new StatementVariable( varName , paramList, parser );
+        variableList.size();
         return  result;
     }
 
     public Varaiable findVarDefinition(String varName){
 
         Varaiable var = null ;
-        for (Object o : variableList ){
-            Varaiable varaiable = (Varaiable) o;
+        for (Varaiable v : variableList ){
+            Varaiable varaiable = (Varaiable) v;
 
-            if ( ((Varaiable) o).getName().equals(varName) ){
+            if ( v.getName().equals(varName) ){
                 varaiable.setName(varName);
-                varaiable.setValue(((Varaiable) o).getValue());
+                varaiable.setValue(v.getValue());
                 var = varaiable;
             }
         }
@@ -85,39 +96,40 @@ public class Parselet {
         if (c == '='){
             type = Token.Type.EQUALS;
         }else if (c == '+'){
-            type = Token.Type.EQUALS;
+            type = Token.Type.PLUS;
 
         }else if (c == '-'){
-            type = Token.Type.EQUALS;
-
+            type = Token.Type.MINUS;
 
         }else if (c == '/'){
-            type = Token.Type.EQUALS;
+            type = Token.Type.DIVISION;
 
         }else  if (c == '*'){
-            type = Token.Type.EQUALS;
+            type = Token.Type.MULTIPLICATION;
 
         }
         else  if (c == '>'){
-            type = Token.Type.EQUALS;
+            type = Token.Type.GREATER_THAN;
         }
         else  if (c == '&'){
-            type = Token.Type.EQUALS;
+            type = Token.Type.AND;
 
         }
         else  if (c == '|'){
-            type = Token.Type.EQUALS;
+            type = Token.Type.OR;
         }
         else  if (c == '<'){
-            type = Token.Type.EQUALS;
+            type = Token.Type.LESS_THAN;
 
-        }else {
-            type = Token.Type.EQUALS;
         }
 
         return type;
     }
 
+
+    public static ArrayList<Varaiable>  getVarList(){
+        return variableList;
+    }
 
 
 }

@@ -19,20 +19,22 @@ public class PrintExpression implements Expression {
 
     public PrintExpression(Token token,  Parselet parselet) {
         this.token = token;
-            if (token.getType() == Token.Type.KEYWORD){
+        this.parselet = parselet;
 
-                token.setType( Token.Type.VARIABLE );
-
-             varaiable = parselet.findVarDefinition(token.getText());
-                if (varaiable == null){
-                    varaiable.setValue("null");
-                }
-
-            }
     }
 
     @Override
     public void evaluate() {
+
+        if (token.getType() == Token.Type.KEYWORD){
+
+            token.setType(Token.Type.VARIABLE);
+            varaiable = parselet.findVarDefinition(token.getText().trim());
+
+            if (varaiable == null){
+                varaiable = new Varaiable(token.getText(), "null");
+            }
+        }
 
         if (token.getType() == Token.Type.STRING){
             System.out.println(token.getText());
@@ -51,7 +53,6 @@ public class PrintExpression implements Expression {
         }else {
             System.out.println("Unknow print statement " + token.getType());
         }
-
     }
 
 }
