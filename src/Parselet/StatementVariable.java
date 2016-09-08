@@ -2,14 +2,14 @@ package Parselet;
 
 import Expression.InterpreterException;
 import Tokens.Token;
+import com.sun.xml.internal.fastinfoset.util.StringArray;
 import main.Interpreter;
 import main.Parser;
 import main.Varaiable;
 
 import java.util.ArrayList;
 
-import static Tokens.Token.Type.NUMBER;
-import static Tokens.Token.Type.STRING;
+import static Tokens.Token.Type.*;
 
 /**
  * Created by Didoy on 8/23/2016.
@@ -19,14 +19,14 @@ public class StatementVariable implements Statement {
     String varName;
     Object value = null;
     Varaiable varaiable = new Varaiable("", null);
-    ArrayList<Token> param;
+    ArrayList<Token> params = new ArrayList<>();
     Parser parser;
     Token OP = null;
     Token.Type state = Token.Type.OBJECT; // default object
 
 
     public StatementVariable(String varName , ArrayList<Token> parameters, Parser parser ) {
-        this.param = parameters;
+        params.addAll(parameters);
         this.varName = varName;
         this.parser = parser;
     }
@@ -34,7 +34,7 @@ public class StatementVariable implements Statement {
 
     @Override
     public void execute() {
-        evaluateParam(); // this will map and create data
+        evaluateParam();
 
         varaiable.setName(varName.trim());
         varaiable.setValue(value);
@@ -45,13 +45,13 @@ public class StatementVariable implements Statement {
 
     private void evaluateParam(){
 
-        for (Token token : param){
+        for (Token token : params){
             eval(state, token);
         }
     }
 
+    // this will map each element in paramlist and assign value to varname
     private void eval(Token.Type state, Token token){
-
 
         switch (token.getType()){
             case OPERATOR:
@@ -74,7 +74,13 @@ public class StatementVariable implements Statement {
                 if (checkCompatability(state, NUMBER)){
 
                     if (value != null){
-                        int val = Integer.parseInt(token.getText() );
+                        Varaiable var = Parselet.findVarDefinition(token.getText());
+                        int val;
+                        if (var != null){
+                             val = (int) var.getValue();
+                        }else {
+                             val = Integer.parseInt(token.getText() );
+                        }
                         value = operate(OP, val);  // get the final value
 
                     }else {
@@ -83,6 +89,28 @@ public class StatementVariable implements Statement {
                     }
                     state = NUMBER;
                 }
+                break;
+
+            case KEYWORD:
+                varaiable = Parselet.findVarDefinition(token.getText());
+
+                if (varaiable != null){
+                        findVariableType(varaiable.getValue());
+                        token.setType(findVariableType(varaiable.getValue())); // set the variable value type
+                        // TODO optiomize this code
+                        if (value != null){
+                            if ( checkCompatability( state, token.getType() )){
+                                eval(state, token);
+                            }
+
+                        }else {
+                            varaiable = Parselet.findVarDefinition(token.getText());
+
+                            value = varaiable.getValue();
+
+                        }
+                }
+                    state = KEYWORD;
                 break;
         }
 
@@ -116,5 +144,15 @@ public class StatementVariable implements Statement {
             value = ( Integer )value * val; // MULTIPLICATION
         }
         return (Integer) value;
+    }
+
+    private Token.Type findVariableType(Object varvalue){
+        Token.Type type = null;
+        if (varvalue instanceof String){
+            type = STRING;
+        }else if (varvalue instanceof Integer){
+            type = NUMBER;
+        }
+        return type;
     }
 }

@@ -6,6 +6,7 @@ import Expression.PrintExpression;
 import Tokens.Token;
 import main.Parser;
 import main.Varaiable;
+import sun.security.krb5.internal.PAData;
 
 import javax.xml.bind.SchemaOutputResolver;
 import java.util.ArrayList;
@@ -40,9 +41,7 @@ public class Parselet {
         Statement result = null;
         parser.matchToken(Token.Type.VARIABLE);
 
-        Token token = parser.getCurrentToken();
-
-        String varName  = token.getText();
+        String varName  = parser.getCurrentToken().getText();
 
         parser.matchToken( Token.Type.KEYWORD );
 
@@ -53,28 +52,19 @@ public class Parselet {
                   InterpreterException.ThrowException(" Invalid " + ExceptionType.ArgumentException);
               }
             }
+                while (parser.getCurrentToken().getType() != Token.Type.PRINT && parser.getCurrentToken().getType() != Token.Type.VARIABLE){
 
-        parser.matchToken( Token.Type.EQUALS) ;
+                     paramList.add(parser.getCurrentToken() ); // ADD THE TOKEN into parameter list
+                     parser.matchToken( parser.getCurrentToken().getType() );
 
+                }
 
-        while (parser.getCurrentToken().getType()  == Token.Type.KEYWORD  || parser.getCurrentToken().getType()  == Token.Type.NUMBER
-                || parser.getCurrentToken().getType()  == Token.Type.STRING || parser.getCurrentToken().getType()  == Token.Type.OPERATOR ){
-
-                        if (parser.getCurrentToken().getType() == Token.Type.KEYWORD && findVarDefinition(parser.getCurrentToken().getText()) == null ) {
-                                break; // THE CURRENT TOKEN KEYWORD IS NOT CONSIDERED  AS VARIABLE. THEREFORE ITS A KEYWORD,
-                                        // AND KEYWORD NEED TO GO FURTHER EVALUATION WHICH IS NOT SUPPORTED BY THIS INTERPRETER
-
-                        }else{
-                            paramList.add(parser.getCurrentToken() ); // ADD THE TOKEN into parameter list
-                            parser.matchToken(parser.getCurrentToken().getType() );
-                        }
-        }
         result = new StatementVariable( varName , paramList, parser );
-        variableList.size();
+        paramList.clear();
         return  result;
     }
 
-    public Varaiable findVarDefinition(String varName){
+    public static Varaiable findVarDefinition(String varName){
 
         Varaiable var = null ;
         for (Varaiable v : variableList ){

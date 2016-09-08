@@ -147,8 +147,10 @@ public class Lexer {
     }
 
     public void printTokens(){
+        int i = 0;
         for (Token tok : tokenArrayList){
-            System.out.println(String.valueOf(tok.getType() + " ------- " + tok.getText()));
+             i ++;
+            System.out.println(String.valueOf(tok.getType() + " ---- " + tok.getText()) + " --- " + i);
         }
     }
 

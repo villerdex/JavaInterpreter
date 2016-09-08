@@ -25,7 +25,7 @@ public class Interpreter {
     public void  run(String source){
         source = validate(source);
         lexer.tokenize(source);
-        lexer.printTokens();
+        //lexer.printTokens();
 
         parser.parse(lexer.getTokenArrayList());
 

@@ -53,7 +53,6 @@ public class Parser {
                  statement = parselet.statementPrint();
                  statementsAST.add(statement);
                 break;
-
         }
     }
 
@@ -79,8 +78,9 @@ public class Parser {
     }
 
     private void eatToken(int offset){
+        System.out.println(currentTokenIndex+1 + "---------"+ getCurrentToken().getType() + " ----- " + tokenArrayList.size() + " ---- " + getCurrentToken().getText() );               // print index of token eaten
         currentTokenIndex += offset;
-        System.out.println(currentTokenIndex + "---------" + tokenArrayList.size());
+
     }
 
     public Token findOperator(char c){
