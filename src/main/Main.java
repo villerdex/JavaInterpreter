@@ -9,8 +9,8 @@ public class Main {
 
 
         String code = "START;" +
-                "var Y = 1 + 1;" +
-                "var X = Y + Y;" +
+                "var Y = 'hell' + 'Uuuu'; " +
+                "var X = Y + ' waaaaaa;'; " +
                 "sulat(X);" +
                 "END;";
 

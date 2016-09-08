@@ -61,7 +61,13 @@ public class StatementVariable implements Statement {
                 if (checkCompatability(state, STRING)){
                     if (value != null ){
                             if (OP.getType() == Token.Type.PLUS){
-                                value += token.getText(); // concatinate
+                                Varaiable var = Parselet.findVarDefinition(token.getText());
+                                    if (var != null){
+                                        value += var.getValue().toString(); // concatinate
+
+                                    }else {
+                                        value += token.getText(); // concatinate
+                                    }
                             }
                     }else {
                         value = token.getText(); // assgin the value
@@ -97,7 +103,7 @@ public class StatementVariable implements Statement {
                 if (varaiable != null){
                         findVariableType(varaiable.getValue());
                         token.setType(findVariableType(varaiable.getValue())); // set the variable value type
-                        // TODO optiomize this code
+                        // TODO optimize this code
                         if (value != null){
                             if ( checkCompatability( state, token.getType() )){
                                 eval(state, token);
