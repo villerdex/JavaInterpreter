@@ -18,6 +18,7 @@ public class PrintExpression implements Expression {
     private Parselet parselet;
     private Varaiable varaiable;
     private String str = "";
+    Token.Type OP = null;
 
     public PrintExpression(ArrayList<Token> parameters,  Parselet parselet) {
         this.parameters.addAll(parameters);
@@ -63,6 +64,11 @@ public class PrintExpression implements Expression {
             setValue( token.getText(), state, Token.Type.NUMBER );
             state = Token.Type.NUMBER;
 
+        }else if (token.getType() == Token.Type.OPERATOR){
+            Token.Type tokType = parselet.findOperator(token.getText().charAt(0));
+                if (tokType == Token.Type.PLUS){
+                    OP = tokType;
+                }
         }
 //        else if (token.getType() == Token.Type.VARIABLE){
 //            // if the variable holds a integer value
@@ -82,7 +88,12 @@ public class PrintExpression implements Expression {
             if (str.equals("")){
                 str = val;
             }else{
-                str = str + val;
+                if (OP != null){
+                    str = str + val;
+                }else {
+                    InterpreterException.ThrowException("Missing", ExceptionType.ArgumentException);
+                    str = "";
+                }
             }
         }
 

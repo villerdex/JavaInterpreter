@@ -111,7 +111,6 @@ public class VariableExpression implements Expression {
     }
 
 
-
     private Integer operate(Token OP, int val){
         if (OP.getType() == Token.Type.PLUS){
             value =( Integer ) value + val; // ADD

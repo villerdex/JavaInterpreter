@@ -88,7 +88,7 @@ public class Parselet {
         return  var;
     }
 
-    private Token.Type findOperator(char c){
+    public Token.Type findOperator(char c){
         Token.Type type = Token.Type.UNKNOWN;
 
 
