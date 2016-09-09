@@ -3,6 +3,7 @@ package Parselet;
 import Expression.ExceptionType;
 import Expression.InterpreterException;
 import Expression.PrintExpression;
+import Expression.VariableExpression;
 import Tokens.Token;
 import main.Parser;
 import main.Varaiable;
@@ -59,7 +60,7 @@ public class Parselet {
 
                 }
 
-        result = new StatementVariable( varName , paramList, parser );
+        result = new StatementVariable( new VariableExpression( varName , paramList, parser ));
         paramList.clear();
         return  result;
     }
