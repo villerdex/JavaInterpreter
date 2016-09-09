@@ -29,11 +29,19 @@ public class Parselet {
         parser.matchToken(Token.Type.PRINT);
         parser.matchToken(Token.Type.LEFT_PARENTHESIS);
 
-        PrintExpression printExpression = new PrintExpression(parser.getCurrentToken(), this);
-        Statement result = new StatementPrint( printExpression );
+        while (parser.getCurrentToken().getType() != Token.Type.PRINT && parser.getCurrentToken().getType() != Token.Type.VARIABLE &&
+                parser.getCurrentToken().getType() != Token.Type.RIGHT_PARENTHESIS){
 
-        parser.matchToken(parser.getCurrentToken().getType());
+            paramList.add(parser.getCurrentToken() ); // ADD THE TOKEN into parameter list
+            parser.matchToken( parser.getCurrentToken().getType() );
+
+        }
+
+        PrintExpression printExpression = new PrintExpression(paramList, this);
+        Statement result = new StatementPrint( printExpression );
         parser.matchToken(Token.Type.RIGHT_PARENTHESIS);
+        paramList.clear();
+
         return result;
     }
 

@@ -3,6 +3,7 @@ package Expression;
 import Parselet.Parselet;
 import Tokens.Token;
 import main.Parser;
+import main.Utility;
 import main.Varaiable;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class VariableExpression implements Expression {
                 OP = parser.findOperator(token.getText().charAt(0));
                 break;
             case STRING:
-                if (checkCompatability(state, STRING)){
+                if (Utility.checkCompatability(state, STRING)){
                     if (value != null ){
                         if (OP.getType() == Token.Type.PLUS){
                             Varaiable var = Parselet.findVarDefinition(token.getText());
@@ -64,7 +65,7 @@ public class VariableExpression implements Expression {
                 break;
 
             case NUMBER:
-                if (checkCompatability(state, NUMBER)){
+                if (Utility.checkCompatability(state, NUMBER)){
 
                     if (value != null){
                         Varaiable var = Parselet.findVarDefinition(token.getText());
@@ -92,7 +93,7 @@ public class VariableExpression implements Expression {
                     token.setType(findVariableType(varaiable.getValue())); // set the variable value type
                     // TODO optimize this code
                     if (value != null){
-                        if ( checkCompatability( state, token.getType() )){
+                        if (Utility.checkCompatability( state, token.getType() )){
                             eval(state, token);
                         }
 
@@ -109,19 +110,7 @@ public class VariableExpression implements Expression {
 
     }
 
-    private boolean checkCompatability(Token.Type state, Token.Type tokenState){
-        boolean isCompatible  = false;
-        if ( state == Token.Type.OBJECT ){
-            state = tokenState;
 
-            isCompatible =  checkCompatability(state, tokenState);
-        }else if (state == tokenState){
-            isCompatible =  true;
-        }else {
-            InterpreterException.ThrowException( state + " is not Compatible with " + tokenState, ExceptionType.InCompatibleException);
-        }
-        return isCompatible;
-    }
 
     private Integer operate(Token OP, int val){
         if (OP.getType() == Token.Type.PLUS){
