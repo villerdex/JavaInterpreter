@@ -6,7 +6,7 @@ import main.Parser;
 /**
  * Created by Didoy on 8/22/2016.
  */
-public class StatementPrint implements Statement{
+public class StatementPrint implements Statement {
 
     Expression expression;
 

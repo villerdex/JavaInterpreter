@@ -11,13 +11,12 @@ public class Token {
     private String text;
     private Varaiable varaiable;
 
-    public Token( Type type, String text )
-    {
+    public Token(Type type, String text) {
         this.type = type;
         this.text = text;
     }
 
-    public Token (Type type, Varaiable varaiable){
+    public Token(Type type, Varaiable varaiable) {
         this.type = type;
         this.varaiable = varaiable;
     }
@@ -38,7 +37,7 @@ public class Token {
         this.type = type;
     }
 
-    public enum Type{
+    public enum Type {
         UNKNOWN,
 
         STRING,
@@ -46,7 +45,6 @@ public class Token {
         VARIABLE,
         VARNAME,
         PRINT,
-        INPUT,
         NUMBER,
         DOT,
         START_BLOCK,
@@ -66,10 +64,12 @@ public class Token {
         MULTIPLICATION,
         DIVISION,
 
+        IF,
         GREATER_THAN,
         LESS_THAN,
         OR,
         AND,
+        NOT,
 
         SEMI_COLON,
         OBJECT

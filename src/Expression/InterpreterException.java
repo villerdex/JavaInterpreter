@@ -5,15 +5,15 @@ package Expression;
  */
 public class InterpreterException {
 
-    public static void ThrowException(String ex){
+    public static void ThrowException(String ex) {
 
         System.out.println(ex);
 
     }
 
-    public static void ThrowException(String ex, ExceptionType exceptionType){
+    public static void ThrowException(String ex, ExceptionType exceptionType) {
 
-        System.out.println(ex + " " + exceptionType );
+        System.out.println(ex + " " + exceptionType);
 
     }
 }

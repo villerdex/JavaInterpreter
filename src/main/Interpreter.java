@@ -10,40 +10,39 @@ import java.util.ArrayList;
 public class Interpreter {
 
 
+    private Lexer lexer = new Lexer();
+    private Parser parser = new Parser();
+
     public Interpreter() {
     }
-
     public Interpreter(String source) {
 
         run(source);
 
     }
 
-    private Lexer lexer = new Lexer();
-    private Parser parser = new Parser();
-
-    public void  run(String source){
+    public void run(String source) {
         source = validate(source);
         lexer.tokenize(source);
-        //lexer.printTokens();
+        lexer.printTokens();
 
         parser.parse(lexer.getTokenArrayList());
 
         ArrayList<Statement> statementArrayList = parser.getStatementsAST();
 
-        for (Statement statement : statementArrayList){
+        for (Statement statement : statementArrayList) {
             statement.execute();
         }
     }
 
-    private String validate(String s){
+    private String validate(String s) {
         String source = "";
 
-          String[] raw  = s.split(";");
-                for (String str : raw){
-                   str = str + " ";    // add space every after semicolon
-                    source += str;
-                }
+        String[] raw = s.split(";");
+        for (String str : raw) {
+            str = str + " ";    // add space every after semicolon
+            source += str;
+        }
         return source;
     }
 

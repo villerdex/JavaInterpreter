@@ -11,88 +11,62 @@ import static java.lang.Enum.valueOf;
  * Created by Didoy on 8/20/2016.
  */
 public class Lexer {
+    int i = 0;
     private String y = "'";
-
-    private enum State{
-        DEFAULT,
-        STRING,
-        NUMBER,
-        PUNCTUATION,
-        PARENTHESIS,
-        KEYWORD,
-        OPERATORS
-
-    }
-
-
+    //@ holds the list of tokens
+    private ArrayList<Token> tokenArrayList = new ArrayList<Token>();
+    //@  holds the current state of token
+    private State state = State.DEFAULT;
+    //@ hold string token or unfinish token
+    private String token = "";
+    //@ holds the string token type
+    private Token.Type tokType = null;
 
     public Lexer() {
 
     }
 
-    //@ holds the list of tokens
-    private ArrayList<Token> tokenArrayList = new ArrayList<Token>();
-
-    //@  holds the current state of token
-    private State state = State.DEFAULT;
-
-    //@ hold string token or unfinish token
-    private String token = "";
-
-    //@ holds the string token type
-    private Token.Type tokType = null;
-
-    int i = 0;
-
-    public ArrayList<Token> getTokenArrayList(){
+    public ArrayList<Token> getTokenArrayList() {
         return tokenArrayList;
     }
 
-    public void tokenize(String source){
+    public void tokenize(String source) {
 
-        for (i = 0; i < source.length(); i++ ){
+        for (i = 0; i < source.length(); i++) {
 
-        char c = source.charAt(i);
+            char c = source.charAt(i);
             findToken(c);
         }
     }
 
-    private void findToken(char c){
-        switch (state){
+    private void findToken(char c) {
+        switch (state) {
             case DEFAULT:
 
-                if (c == ' '){
-                state = State.DEFAULT;
-                }
-                else if (isOperator(c)){
+                if (c == ' ') {
+                    state = State.DEFAULT;
+                } else if (isOperator(c)) {
                     state = State.OPERATORS;
-                    tokenArrayList.add( new Token(Token.Type.OPERATOR, String.valueOf(c)) );
+                    tokenArrayList.add(new Token(Token.Type.OPERATOR, String.valueOf(c)));
                     state = State.DEFAULT;
 
-                }
-                else if(isParenthesis(c)) {
-                tokType = findParenthesisType(c);
-                tokenArrayList.add(new Token(tokType, Character.toString(c)));
+                } else if (isParenthesis(c)) {
+                    tokType = findParenthesisType(c);
+                    tokenArrayList.add(new Token(tokType, Character.toString(c)));
                     state = State.DEFAULT;
-                }
-                else if (Character.isDigit(c)){
+                } else if (Character.isDigit(c)) {
                     token += c;
                     state = State.NUMBER;
-                }
-                else if (Character.isLetterOrDigit(c)){
+                } else if (Character.isLetterOrDigit(c)) {
 
                     token += c;
                     state = State.KEYWORD;
-                }
-
-                else if (c == y.charAt(0) ){
+                } else if (c == y.charAt(0)) {
 
                     state = State.STRING;
-                }
-
-                else if (isPunctuation(c)){
+                } else if (isPunctuation(c)) {
                     state = State.PUNCTUATION;
-                }else {
+                } else {
                     state = State.DEFAULT;
                 }
                 break;
@@ -100,44 +74,37 @@ public class Lexer {
             // AFTER DEFAULT STATE
 
             case STRING:
-                if( c == y.charAt(0) ) // if it is single colon
+                if (c == y.charAt(0)) // if it is single colon
                 {
-                    tokenArrayList.add( new Token(Token.Type.STRING, token) );
+                    tokenArrayList.add(new Token(Token.Type.STRING, token));
                     token = "";
                     state = State.DEFAULT;
-                }
-                else
-                {
+                } else {
                     token += c;
                 }
                 break;
             case NUMBER:
-                if( Character.isDigit(c) || (c == '.'))
-                {
+                if (Character.isDigit(c) || (c == '.')) {
                     token += c;
-                }
-                else
-                {
-                    tokenArrayList.add( new Token(Token.Type.NUMBER, token ) );
+                } else {
+                    tokenArrayList.add(new Token(Token.Type.NUMBER, token));
                     token = "";
                     state = State.DEFAULT;
                     i--;
                 }
                 break;
             case OPERATORS:
-                tokenArrayList.add( new Token(Token.Type.OPERATOR, String.valueOf(c)) );
+                tokenArrayList.add(new Token(Token.Type.OPERATOR, String.valueOf(c)));
                 state = State.DEFAULT;
                 break;
 
             case KEYWORD:
-                if(Character.isLetterOrDigit(c) ||
-                        c == '_' || c == '!')
-                {
+                if (Character.isLetterOrDigit(c) ||
+                        c == '_' || c == '!') {
                     token += c;
-                }
-                else {
+                } else {
                     tokType = findKeyWord(token);
-                    tokenArrayList.add( new Token(tokType, token) );
+                    tokenArrayList.add(new Token(tokType, token));
                     token = "";
                     state = State.DEFAULT;
                     i--; // minus the index in-case of white space, it will triggered this else code block
@@ -146,29 +113,32 @@ public class Lexer {
         }
     }
 
-    public void printTokens(){
+    public void printTokens() {
         int i = 0;
-        for (Token tok : tokenArrayList){
-             i ++;
+        for (Token tok : tokenArrayList) {
+            i++;
             System.out.println(String.valueOf(tok.getType() + " ---- " + tok.getText()) + " --- " + i);
         }
     }
 
-    private Token.Type findKeyWord(String s){
+    private Token.Type findKeyWord(String s) {
         s = s.toLowerCase();
 
-        switch (s){
+        switch (s) {
             case "sulat":
-            tokType = Token.Type.PRINT;
+                tokType = Token.Type.PRINT;
                 break;
             case "start":
-            tokType = Token.Type.START_BLOCK;
+                tokType = Token.Type.START_BLOCK;
                 break;
             case "end":
                 tokType = Token.Type.END_BLOCK;
                 break;
             case "var":
                 tokType = Token.Type.VARIABLE;
+                break;
+            case "kung":
+                tokType = Token.Type.IF;
                 break;
             default:
                 tokType = Token.Type.KEYWORD;
@@ -177,8 +147,8 @@ public class Lexer {
 
         return tokType;
     }
-    private boolean isParenthesis( char c )
-    {
+
+    private boolean isParenthesis(char c) {
         boolean prntOp = c == '(' || c == ')';
         boolean braceOp = c == '{' || c == '}';
         boolean brakOp = c == '[' || c == ']';
@@ -186,11 +156,9 @@ public class Lexer {
         return prntOp || braceOp || brakOp;
     }
 
-    private Token.Type findParenthesisType( char c )
-    {
+    private Token.Type findParenthesisType(char c) {
         Token.Type type = Token.Type.UNKNOWN;
-        switch( c )
-        {
+        switch (c) {
             case '(':
                 type = Token.Type.LEFT_PARENTHESIS;
                 break;
@@ -215,53 +183,57 @@ public class Lexer {
 
     }
 
+    private boolean isPunctuation(char c) {
 
-
-    private boolean isPunctuation(char c){
-
-        if (c == ';'){
+        if (c == ';') {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
-    private boolean isOperator(char c){
+    private boolean isOperator(char c) {
 
         boolean isOperator = false;
 
-        if (c == '='){
+        if (c == '=') {
             isOperator = true;
-        }else if (c == '+'){
-            isOperator = true;
-
-        }else if (c == '-'){
+        } else if (c == '+') {
             isOperator = true;
 
-        }else if (c == '/'){
+        } else if (c == '-') {
             isOperator = true;
 
-        }else  if (c == '*'){
+        } else if (c == '/') {
             isOperator = true;
-        }
-        else  if (c == '>'){
+
+        } else if (c == '*') {
             isOperator = true;
-        }
-        else  if (c == '&'){
+        } else if (c == '>') {
             isOperator = true;
-        }
-        else  if (c == '|'){
+        } else if (c == '&') {
             isOperator = true;
-        }
-        else  if (c == '<'){
+        } else if (c == '|') {
             isOperator = true;
-        }else {
+        } else if (c == '<') {
+            isOperator = true;
+        } else {
             isOperator = false;
         }
 
-    return isOperator;
+        return isOperator;
     }
 
+    private enum State {
+        DEFAULT,
+        STRING,
+        NUMBER,
+        PUNCTUATION,
+        PARENTHESIS,
+        KEYWORD,
+        OPERATORS
+
+    }
 
 
 }
