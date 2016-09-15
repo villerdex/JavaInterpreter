@@ -8,5 +8,9 @@ SUPPORTS:
 -Print Statements
 -If Statement
 
+NOT SUPPORTED:
+-IF elseif else statement
+- >= and <= bitwise operator 
+
 
 
